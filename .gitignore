@@ -1,0 +1,8 @@
+/venv
+/test
+/train
+/valid
+*.mp4
+__pycache__/
+*.py[cod]
+.cache
