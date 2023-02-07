@@ -1,13 +1,13 @@
-train: ../train/images
-val: ../valid/images
-test: ../test/images
-
+names:
+- tennis-ball
+- tennis-players
 nc: 2
-names: ['tennis-ball', 'tennis-players']
-
 roboflow:
-  workspace: project
-  project: tennis-tracking
-  version: 1
   license: CC BY 4.0
-  url: https://universe.roboflow.com/project/tennis-tracking/dataset/1
+  project: tennis-tracking
+  url: https://universe.roboflow.com/slalom/tennis-tracking/dataset/1
+  version: 1
+  workspace: slalom
+test: ../test/images
+train: Tennis-tracking-1/train/images
+val: Tennis-tracking-1/valid/images

@@ -1,6 +1,6 @@
 import cv2
 import os
-
+from roboflow import Roboflow
 
 def rename_files_in_dir(dir_path:str, txt_to_remove:str,txt_to_insert:str):
     """Rename files in directory.
@@ -11,7 +11,8 @@ def rename_files_in_dir(dir_path:str, txt_to_remove:str,txt_to_insert:str):
         txt_to_insert (str): _description_
     """
     for filename in os.listdir(dir_path):
-        os.rename(filename, filename.replace('_2017.mp4', ''))
+        full_file_path = os.path.join(dir_path,filename)
+        os.rename(full_file_path, full_file_path.replace(txt_to_remove, txt_to_insert))
 
 
 def convert_mp4_to_jpg(dir_path:str, txt_to_remove:str,txt_to_insert:str):
@@ -63,3 +64,25 @@ def convert_mp4_to_jpg(dir_path:str, txt_to_remove:str,txt_to_insert:str):
         cam.release()
         cv2.destroyAllWindows()
         
+def main():
+    """Performs a test-run for local testing"""
+    #rename_files_in_dir('/Users/levihuddleston/Documents/Clips/australia',"austrailia_open_semi_final","australian_open")
+    get_roboflow_data()
+def get_roboflow_data(api_key:str = "E1UAwvyKe8uHH4eJGFid" ,workspace:str = "slalom",project:str = "tennis-tracking",data_format:str = "yolov8"):
+    """Get dataset from Roboflow.
+
+    Args:
+        api_key (str, optional): _description_. Defaults to "E1UAwvyKe8uHH4eJGFid".
+        workspace (str, optional): _description_. Defaults to "slalom".
+        project (str, optional): _description_. Defaults to "tennis-tracking".
+        data_format (str, optional): _description_. Defaults to "yolov8".
+    """
+    
+    rf = Roboflow(api_key=api_key)
+    project = rf.workspace(workspace).project(project)
+    dataset = project.version(1).download(data_format)
+    print(dataset.location)
+    return dataset
+
+if __name__ == "__main__":
+    main()
