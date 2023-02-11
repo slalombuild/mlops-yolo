@@ -4,10 +4,10 @@ names:
 nc: 2
 roboflow:
   license: CC BY 4.0
-  project: tennis-tracking
-  url: https://universe.roboflow.com/slalom/tennis-tracking/dataset/1
-  version: 1
+  project: tennis-object-detection
+  url: https://universe.roboflow.com/slalom/tennis-object-detection/dataset/2
+  version: 2
   workspace: slalom
 test: ../test/images
-train: Tennis-tracking-1/train/images
-val: Tennis-tracking-1/valid/images
+train: tennis-object-detection-2/train/images
+val: tennis-object-detection-2/valid/images
