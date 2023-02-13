@@ -123,16 +123,16 @@ def get_random_sample(read_path,write_path = "videos/clips/sample_photos/sample_
 def main():
     """Performs a test-run for local testing"""
     #rename_files_in_dir('/Users/levihuddleston/Documents/Clips/australia',"austrailia_open_semi_final","australian_open","sample_atp_rallies")
-    #get_roboflow_data(2)
+    get_roboflow_data(4)
     # clips = ['australian_open','laver_cup','paris_masters','roland_garros']
     # for clip in clips:
     #     convert_mp4_to_jpg(os.path.join('videos/clips/',clip))
     # num_jpgs = fcount('videos/clips/)
     # print(num_jpgs)
-    base_path = "videos/clips/sample_atp_rallies"
-    directory_list = [os.path.join(base_path,d) for d in os.listdir(base_path) if os.path.isdir(os.path.join(base_path,d))]
-    for directory_path in directory_list:
-        get_random_sample(directory_path)
+    # base_path = "videos/clips/sample_atp_rallies"
+    # directory_list = [os.path.join(base_path,d) for d in os.listdir(base_path) if os.path.isdir(os.path.join(base_path,d))]
+    # for directory_path in directory_list:
+    #     get_random_sample(directory_path)
 
 if __name__ == "__main__":
     main()
