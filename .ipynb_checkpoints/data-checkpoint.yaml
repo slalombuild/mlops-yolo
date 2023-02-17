@@ -1,0 +1,13 @@
+names:
+- tennis-ball
+- tennis-players
+nc: 2
+roboflow:
+  license: CC BY 4.0
+  project: tennis-object-detection
+  url: https://universe.roboflow.com/slalom/tennis-object-detection/dataset/4
+  version: 4
+  workspace: slalom
+test: ../test/images
+train: tennis-object-detection-4/train/images
+val: tennis-object-detection-4/valid/images
