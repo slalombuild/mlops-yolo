@@ -14,6 +14,15 @@ def create_parser():
 
     # Add the arguments
     model_trainer_parse.add_argument(
+        "--model",
+        metavar="pre_trained_model",
+        type=str,
+        required=True,
+        choices={"yolov8n","yolov8s","yolov8m","yolov8l","yolov8x"},
+        help="Trained model that you choose to start training the model with",
+    )
+
+    model_trainer_parse.add_argument(
         "--roboflow_api_key",
         metavar="roboflow_api_key",
         type=str,

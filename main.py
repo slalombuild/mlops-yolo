@@ -11,12 +11,12 @@ import glob
 args = create_parser().parse_args()
 
 # Clean log directory
-if remove_logs:
+if args.remove_logs:
     for filename in glob.glob("log/*.log*"):
         os.remove(filename)
 
 # Setting where to write log file
-log_path = os.path.join(os.path.dirname(__file__), "log", "data_validation.log")
+log_path = os.path.join(os.path.dirname(__file__), "log", "train_model.log")
 os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
 # Setting the basic configuration of the log file to write to a file and to the console
