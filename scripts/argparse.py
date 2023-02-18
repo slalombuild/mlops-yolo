@@ -13,14 +13,6 @@ def create_parser():
     )
 
     # Add the arguments
-    model_trainer_parse.add_argument(
-        "--model",
-        metavar="pre_trained_model",
-        type=str,
-        required=True,
-        choices={"yolov8n","yolov8s","yolov8m","yolov8l","yolov8x"},
-        help="Trained model that you choose to start training the model with",
-    )
 
     model_trainer_parse.add_argument(
         "--roboflow_api_key",
@@ -28,14 +20,6 @@ def create_parser():
         type=str,
         required=True,
         help="API key to access Roboflow",
-    )
-    
-    model_trainer_parse.add_argument(
-        "--data_version",
-        metavar="data_version",
-        type=int,
-        required=True,
-        help="Version of the dataset to grab from Roboflow project",
     )
     
     model_trainer_parse.add_argument(

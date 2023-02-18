@@ -1,10 +1,12 @@
-from scripts.utilities import get_roboflow_data
+from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
+from scripts.train import train_model
 import sys
 import logging
 import json
 import os
 import glob
+import yaml
 
 # Get arguments:
 # Execute the parse_args() method to get arguments
@@ -19,6 +21,7 @@ if args.remove_logs:
 log_path = os.path.join(os.path.dirname(__file__), "log", "train_model.log")
 os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
+
 # Setting the basic configuration of the log file to write to a file and to the console
 logging.basicConfig(
     handlers=[logging.FileHandler(log_path), logging.StreamHandler(sys.stdout)],
@@ -32,14 +35,22 @@ logging.getLogger().setLevel(args.logging_level)
 logging.info(f"YOLOv8 Model training log path: {log_path}")
 
 def main():
+    # Get Default parameters
+    with open("config/model_config.yaml", "r") as file:
+        yaml_inputs = yaml.safe_load(file)
+    roboflow_params = yaml_inputs["roboflow_params"]
+    logging.info(f"Roboflow parameters: {json.dumps(roboflow_params, indent=4, sort_keys=True)}")
+    training_params = yaml_inputs["training_params"]
+    logging.info(f"Training parameters: {json.dumps(training_params, indent=4, sort_keys=True)}")
+
     logging.info("Starting to download training, validationa and test images")
-    get_roboflow_data(data_version = args.data_version, api_key = args.roboflow_api_key)
+    dataset_dir = get_roboflow_data(api_key = args.roboflow_api_key,**roboflow_params)
     logging.info("Image download complete")
 
+    logging.info("Starting a training job. For details around configurations see 'config/model_config.yaml")
+    train_model(dataset_dir=dataset_dir,**training_params)
+    logging.info("Training complete.")
 if __name__ == "__main__":
-    try:
-        logging.info("Process Start")
-        main()
-        logging.info("Process Complete")
-    except Exception as e:
-        raise Exception(e)
+    logging.info("Process Start")
+    main()
+    logging.info("Process Complete")

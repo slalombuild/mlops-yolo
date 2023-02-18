@@ -1,0 +1,12 @@
+roboflow_params:
+  data_version: 2
+  workspace: slalom
+  project: tennis-object-detection
+  data_format: yolov8
+  write_dataset: datasets
+  overwrite: False
+training_params:  
+  model: yolov8n.pt # choices="yolov8n","yolov8s","yolov8m","yolov8l","yolov8x"
+  epochs: 1
+  batch: 1
+  imgsz: 640

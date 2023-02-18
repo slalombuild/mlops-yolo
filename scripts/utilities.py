@@ -1,7 +1,6 @@
 "List of utilities for preparing the image data, and retrieving the image data from Roboflow"
 import cv2
 import os
-from roboflow import Roboflow
 import logging
 import sys
 import numpy as np
@@ -72,23 +71,6 @@ def convert_mp4_to_jpg(dir_path:str, txt_to_remove:str = '.mp4',txt_to_insert:st
         cam.release()
         cv2.destroyAllWindows()
         
-
-def get_roboflow_data(data_version:int,api_key:str ,workspace:str = "slalom",project:str = "tennis-object-detection",data_format:str = "yolov8"):
-    """Get dataset from Roboflow.
-
-    Args:
-        data_version (int): Version of the dataset that you need to grab from Roboflow. 
-        api_key (str, optional): API key to Roboflow environment.
-        workspace (str, optional): Workspace where the dataset lives. Defaults to "slalom".
-        project (str, optional): Project for the dataset. Defaults to "tennis-object-detection".
-        data_format (str, optional): The data format for the model. Defaults to "yolov8".
-    """
-    
-    rf = Roboflow(api_key=api_key)
-    project = rf.workspace(workspace).project(project)
-    dataset = project.version(data_version).download(data_format)
-    return dataset
-
 def fcount(path, exts=[".jpg"]):
     """Get the number of files that end wih inputted ext.
     
@@ -125,7 +107,7 @@ def get_random_sample(read_path:str,write_path:str,sub_sample:float = 0.05):
 
 def main():
     """Performs a test-run for local testing"""
-    get_roboflow_data(4)
+
 
 
 if __name__ == "__main__":
