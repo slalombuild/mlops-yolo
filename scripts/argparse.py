@@ -46,7 +46,7 @@ def create_parser():
         default=False,
         help="Remove all logs from the logs directory",
     )
-    
+
     model_trainer_parse.add_argument(
         "--logging_level",
         metavar="logging_level",
@@ -57,7 +57,6 @@ def create_parser():
         help="Logging level to be used when the python module is executed. Values include: INFO and DEBUG",
     )
 
-    
     return model_trainer_parse
 
 

@@ -34,22 +34,33 @@ logging_level = logging.getLevelName(args.logging_level)
 logging.getLogger().setLevel(args.logging_level)
 logging.info(f"YOLOv8 Model training log path: {log_path}")
 
+
 def main():
     # Get Default parameters
     with open("config/model_config.yaml", "r") as file:
         yaml_inputs = yaml.safe_load(file)
     roboflow_params = yaml_inputs["roboflow_params"]
-    logging.debug(f"Roboflow parameters: {json.dumps(roboflow_params, indent=4, sort_keys=True)}")
+    logging.debug(
+        f"Roboflow parameters: {json.dumps(roboflow_params, indent=4, sort_keys=True)}"
+    )
     training_params = yaml_inputs["training_params"]
-    logging.debug(f"Training parameters: {json.dumps(training_params, indent=4, sort_keys=True)}")
+    logging.debug(
+        f"Training parameters: {json.dumps(training_params, indent=4, sort_keys=True)}"
+    )
     if args.get_data:
         logging.info("Starting to download training, validation and test images")
-        dataset_dir = get_roboflow_data(api_key = args.roboflow_api_key,**roboflow_params)
+        dataset_dir = get_roboflow_data(
+            api_key=args.roboflow_api_key, **roboflow_params
+        )
         logging.info(f"Photo download complete at: {dataset_dir}")
     if args.train_model:
-        logging.info("Starting a training job. For details around configurations see 'config/model_config.yaml")
-        train_model(dataset_dir=dataset_dir,**training_params)
+        logging.info(
+            "Starting a training job. For details around configurations see 'config/model_config.yaml"
+        )
+        train_model(dataset_dir=dataset_dir, **training_params)
         logging.info("Training complete.")
+
+
 if __name__ == "__main__":
     logging.info("Process Start")
     main()
