@@ -5,6 +5,7 @@ roboflow_params:
   data_format: yolov8
   write_dataset: datasets
   overwrite: False
+  repo_name: yolo_tennis
 training_params:  
   model: yolov8n.pt # choices="yolov8n","yolov8s","yolov8m","yolov8l","yolov8x"
   epochs: 1

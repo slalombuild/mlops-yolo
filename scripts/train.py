@@ -3,6 +3,7 @@ import os
 import yaml
 import logging
 
+
 def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz:int):
     """Trains a YOLOv8 model using the ultralytics package.
 
@@ -19,5 +20,4 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz:int
     logging.info(f"Device to run on: {device}")
     model = YOLO(model = model)  # load a pretrained YOLOv8n model
     model.train(data = data_path,epochs = epochs, batch = batch,imgsz=imgsz, device = device )  # train the model
-    metrics = model.val()  # evaluate model performance on the validation set
-    model.export(format="torchscript")
+    

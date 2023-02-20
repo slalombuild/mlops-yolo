@@ -5,6 +5,7 @@ import logging
 import sys
 import numpy as np
 import shutil
+import yaml
 
 
 def rename_files_in_dir(dir_path:str, txt_to_remove:str,txt_to_insert:str):
@@ -104,6 +105,14 @@ def get_random_sample(read_path:str,write_path:str,sub_sample:float = 0.05):
     # select sub-sample of the files randomly 
     random_files = np.random.choice(files, int(len(files)*sub_sample))
     files = [shutil.copy(os.path.join(read_path,file),write_path) for file in random_files]
+
+def update_yaml(yaml_path, new_item):
+    with open(yaml_path,'r') as yamlfile:
+        cur_yaml = yaml.safe_load(yamlfile) # Note the safe_load
+        cur_yaml.update(new_item)
+    if cur_yaml:
+        with open(yaml_path,'w') as yamlfile:
+            yaml.safe_dump(cur_yaml, yamlfile) # Also note the safe_dump
 
 def main():
     """Performs a test-run for local testing"""
