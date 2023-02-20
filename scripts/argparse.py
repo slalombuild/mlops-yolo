@@ -21,7 +21,22 @@ def create_parser():
         required=True,
         help="API key to access Roboflow",
     )
-    
+
+    model_trainer_parse.add_argument(
+        "--get_data",
+        metavar="get_data",
+        type=str2bool,
+        required=True,
+        help="If true new data will be downloaded.",
+    )
+
+    model_trainer_parse.add_argument(
+        "--train_model",
+        metavar="train_model",
+        type=str2bool,
+        required=True,
+        help="If true a new model will be trained",
+    )
     model_trainer_parse.add_argument(
         "--remove_logs",
         metavar="remove_logs",

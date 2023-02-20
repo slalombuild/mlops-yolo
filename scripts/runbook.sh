@@ -5,3 +5,5 @@ python3 detect.py  --source ../laver_cup_2017_edit.mp4 --view-img
 yolo task=detect mode=predict model=best_02_12.pt conf=0.20 source=videos/clips/sample_atp_rallies/sample_atp_rallies_1.mp4 show=true    
 yolo task=detect mode=train  model=yolov8n.pt data=/Users/levihuddleston/Documents/Repos/yolo_tennis/data.yaml epochs=1 imgsz=640
 python3 track.py --source ../videos/clips/sample_atp_rallies/sample_atp_rallies_7.mp4 --yolo-weights ../best_02_12.pt --tracking-method strongsort --save-vid
+
+python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data True --train_model True --remove_logs False --logging_level INFO
