@@ -40,6 +40,12 @@ def main():
     with open("config/model_config.yaml", "r") as file:
         yaml_inputs = yaml.safe_load(file)
     roboflow_params = yaml_inputs["roboflow_params"]
+    dataset_dir = os.path.join(
+        yaml_inputs["roboflow_params"]["write_dataset"],
+        yaml_inputs["roboflow_params"]["project"]
+        + "-"
+        + str(yaml_inputs["roboflow_params"]["data_version"]),
+    )
     logging.debug(
         f"Roboflow parameters: {json.dumps(roboflow_params, indent=4, sort_keys=True)}"
     )
@@ -49,9 +55,7 @@ def main():
     )
     if args.get_data:
         logging.info("Starting to download training, validation and test images")
-        dataset_dir = get_roboflow_data(
-            api_key=args.roboflow_api_key, **roboflow_params
-        )
+        get_roboflow_data(api_key=args.roboflow_api_key, **roboflow_params)
         logging.info(f"Photo download complete at: {dataset_dir}")
     if args.train_model:
         logging.info(
