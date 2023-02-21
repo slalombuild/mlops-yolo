@@ -1,7 +1,9 @@
 from scripts.utilities import update_yaml
 from roboflow import Roboflow
+import logging
 import os
 import yaml
+import json
 
 
 def get_roboflow_data(
@@ -32,21 +34,24 @@ def get_roboflow_data(
     # Ensuring dataset directory exists
     if not os.path.exists(write_dataset):
         os.makedirs(write_dataset)
-    location = os.path.join(write_dataset, project + "-" + str(data_version))
+    dataset_dir = os.path.join(write_dataset, project + "-" + str(data_version))
+    logging.info(f"Dataset Directory: {dataset_dir}")
     rf = Roboflow(api_key=api_key)
     project = rf.workspace(workspace).project(project)
     dataset = project.version(data_version).download(
-        data_format, location=location, overwrite=overwrite
+        data_format, location=dataset_dir, overwrite=overwrite
     )
     updates_to_yaml = {
-        "path": os.path.join("..", repo_name, location),
-        "test": "test/images",
-        "train": "train/images",
-        "val": "valid/images",
+        "test": os.path.abspath(os.path.join(dataset_dir,"test/images")),
+        "train": os.path.abspath(os.path.join(dataset_dir,"train/images")),
+        "val": os.path.abspath(os.path.join(dataset_dir,"valid/images")),
     }
-    update_yaml(os.path.join(location, "data.yaml"), updates_to_yaml)
+    logging.info(
+        f"YAML updates: {json.dumps(updates_to_yaml, indent=4, sort_keys=True)}"
+    )
+    update_yaml(os.path.join(dataset_dir, "data.yaml"), updates_to_yaml)
 
-    return location
+    return dataset_dir
 
 
 def main():
