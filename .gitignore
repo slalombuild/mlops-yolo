@@ -3,6 +3,7 @@
 /datasets
 /videos
 /runs
+/mlruns
 /log
 .ipynb_checkpoints
 *.mp4

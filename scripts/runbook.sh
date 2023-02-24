@@ -11,3 +11,6 @@ python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data True --train_m
 
 # MLFLOW
  mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root ./artifacts --host 0.0.0.0 --port 8000 
+ mlflow ui
+pkill -f gunicorn
+python -m scripts.mlops.register_model --name BestTennisDetector --model ultralytics/runs/detect/train/weights/best.pt --model-name TennisDetector

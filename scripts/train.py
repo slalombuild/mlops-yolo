@@ -2,7 +2,9 @@ from ultralytics import YOLO
 import os
 import yaml
 import logging
-
+import csv
+from scripts.mlops.register_model import register_model
+import pdb
 
 def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: int):
     """Trains a YOLOv8 model using the ultralytics package.
@@ -18,7 +20,14 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: in
     logging.info(f"Dataset location: {data_path}")
     device = os.environ.get("INFERENCE_DEVICE", "cpu")
     logging.info(f"Device to run on: {device}")
-    model = YOLO(model=model)  # load a pretrained YOLOv8n model
+     # Load a pretrained YOLOv8n model
+    model = YOLO(model=model) 
+    # Train the model
     model.train(
         data=data_path, epochs=epochs, batch=batch, imgsz=imgsz, device=device
-    )  # train the model
+    )  
+    # Register the model
+    register_model(experiment_name = 'BestTennisDetector', model_name = 'TennisDetector', save_dir = model.trainer.save_dir)       
+    
+
+

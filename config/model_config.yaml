@@ -9,5 +9,5 @@ roboflow_params:
 training_params:  
   model: yolov8n.pt # choices="yolov8n","yolov8s","yolov8m","yolov8l","yolov8x"
   epochs: 1
-  batch: 1
+  batch: 5
   imgsz: 640
