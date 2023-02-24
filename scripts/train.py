@@ -1,10 +1,8 @@
 from ultralytics import YOLO
 import os
-import yaml
 import logging
-import csv
 from scripts.mlops.register_model import register_model
-import pdb
+import torch
 
 def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: int):
     """Trains a YOLOv8 model using the ultralytics package.
@@ -18,8 +16,14 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: in
     """
     data_path = os.path.join(dataset_dir, "data.yaml")
     logging.info(f"Dataset location: {data_path}")
-    device = os.environ.get("INFERENCE_DEVICE", "cpu")
-    logging.info(f"Device to run on: {device}")
+    if torch.cuda.is_available():
+        device = torch.cuda.current_device()
+        logging.info(f"Device is running on: {torch.cuda.get_device_name(device)}")
+    else:
+        device = "cpu"
+        logging.info(f"Device to run on: {device}")
+    
+    
      # Load a pretrained YOLOv8n model
     model = YOLO(model=model) 
     # Train the model

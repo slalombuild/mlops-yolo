@@ -15,7 +15,10 @@ args = create_parser().parse_args()
 # Clean log directory
 if args.remove_logs:
     for filename in glob.glob("log/*.log*"):
-        os.remove(filename)
+        try:
+            os.remove(filename)
+        except OSError:
+            pass 
 
 # Setting where to write log file
 log_path = os.path.join(os.path.dirname(__file__), "log", "train_model.log")
@@ -32,7 +35,7 @@ logging.basicConfig(
 
 logging_level = logging.getLevelName(args.logging_level)
 logging.getLogger().setLevel(args.logging_level)
-logging.info(f"YOLOv8 Model training log path: {log_path}")
+logging.debug(f"YOLOv8 Model training log path: {log_path}")
 
 
 def main():
