@@ -93,6 +93,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
             registered_model_name=model_name,
         )
 
-
+def main():
+    pass # TODO
 if __name__ == "__main__":
     main()
