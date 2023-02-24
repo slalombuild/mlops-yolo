@@ -42,9 +42,9 @@ def get_roboflow_data(
         data_format, location=dataset_dir, overwrite=overwrite
     )
     updates_to_yaml = {
-        "test": os.path.abspath(os.path.join(dataset_dir,"test/images")),
-        "train": os.path.abspath(os.path.join(dataset_dir,"train/images")),
-        "val": os.path.abspath(os.path.join(dataset_dir,"valid/images")),
+        "test": os.path.abspath(os.path.join(dataset_dir, "test/images")),
+        "train": os.path.abspath(os.path.join(dataset_dir, "train/images")),
+        "val": os.path.abspath(os.path.join(dataset_dir, "valid/images")),
     }
     logging.info(
         f"YAML updates: {json.dumps(updates_to_yaml, indent=4, sort_keys=True)}"

@@ -18,7 +18,7 @@ if args.remove_logs:
         try:
             os.remove(filename)
         except OSError:
-            pass 
+            pass
 
 # Setting where to write log file
 log_path = os.path.join(os.path.dirname(__file__), "log", "train_model.log")

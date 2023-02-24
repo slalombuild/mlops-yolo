@@ -4,6 +4,7 @@ import logging
 from scripts.mlops.register_model import register_model
 import torch
 
+
 def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: int):
     """Trains a YOLOv8 model using the ultralytics package.
 
@@ -22,16 +23,14 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: in
     else:
         device = "cpu"
         logging.info(f"Device to run on: {device}")
-    
-    
-     # Load a pretrained YOLOv8n model
-    model = YOLO(model=model) 
+
+    # Load a pretrained YOLOv8n model
+    model = YOLO(model=model)
     # Train the model
-    model.train(
-        data=data_path, epochs=epochs, batch=batch, imgsz=imgsz, device=device
-    )  
+    model.train(data=data_path, epochs=epochs, batch=batch, imgsz=imgsz, device=device)
     # Register the model
-    register_model(experiment_name = 'BestTennisDetector', model_name = 'TennisDetector', save_dir = model.trainer.save_dir)       
-    
-
-
+    register_model(
+        experiment_name="BestTennisDetector",
+        model_name="TennisDetector",
+        save_dir=model.trainer.save_dir,
+    )

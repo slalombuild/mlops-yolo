@@ -125,7 +125,6 @@ def update_yaml(yaml_path, new_item):
             yaml.safe_dump(cur_yaml, yamlfile)  # Also note the safe_dump
 
 
-
 def main():
     """Performs a test-run for local testing"""
 
