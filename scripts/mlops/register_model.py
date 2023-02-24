@@ -12,27 +12,6 @@ from scripts.mlops.model_wrapper import TennisDetectorWrapper
 
 mlflow.set_tracking_uri("./mlruns")
 
-PYTHON_VERSION = "{major}.{minor}.1".format(
-    major=version_info.major, minor=version_info.minor
-)
-
-env = {
-    "channels": ["defaults"],
-    "dependencies": [
-        "python~={}".format(PYTHON_VERSION),
-        "pip",
-        {
-            "pip": [
-                "mlflow==2.1.1",
-                "ultralytics==8.0.20",
-                "cloudpickle=={}".format(cloudpickle.__version__),
-                "roboflow==0.2.31",
-            ],
-        },
-    ],
-    "name": "tennis_env",
-}
-
 
 def get_experiment_id(name):
     exp = mlflow.get_experiment_by_name(name)
@@ -40,6 +19,11 @@ def get_experiment_id(name):
         exp_id = mlflow.create_experiment(name)
         return exp_id
     return exp.experiment_id
+
+
+def read_lines(path):
+    with open(path) as f:
+        return f.read().splitlines()
 
 
 def log_metrics(save_dir):
@@ -85,10 +69,11 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         log_metrics(save_dir)
         for file in sorted(save_dir.glob("*.png")):
             mlflow.log_artifact(file)
+        pip_reqs = read_lines('requirements.txt')
         mlflow.pyfunc.log_model(
             "model_env",
             python_model=model,
-            conda_env=env,
+            pip_requirements=pip_reqs,
             artifacts=artifacts,
             registered_model_name=model_name,
         )
@@ -97,3 +82,13 @@ def main():
     pass # TODO
 if __name__ == "__main__":
     main()
+
+
+
+
+
+
+
+
+
+        

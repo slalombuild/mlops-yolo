@@ -1,0 +1,11 @@
+black==23.1.0
+mlflow==2.1.1
+pylint==2.16.2
+pytest==7.2.1
+roboflow==0.2.31
+ultralytics==8.0.20
+#pip3 uninstall torch torchvision torchaudio
+#pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu117
+# torch --index-url https://download.pytorch.org/whl/cu117
+# torchvision --index-url https://download.pytorch.org/whl/cu117
+# torchaudio --index-url https://download.pytorch.org/whl/cu117
