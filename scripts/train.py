@@ -17,11 +17,10 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: in
     """
     data_path = os.path.join(dataset_dir, "data.yaml")
     logging.info(f"Dataset location: {data_path}")
-    try:
-        if torch.cuda.is_available():
-            device = torch.cuda.current_device()
-            logging.info(f"Device is running on: {torch.cuda.get_device_name(device)}")
-    except:
+    if torch.cuda.is_available():
+        device = torch.cuda.current_device()
+        logging.info(f"Device is running on: {torch.cuda.get_device_name(device)}")
+    else:
         logging.info(f"CUDA is not available")
         device = "cpu"
         logging.info(f"Device to run on: {device}")
