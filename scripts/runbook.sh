@@ -1,7 +1,10 @@
 #MAC
 yolo task=detect mode=train  model=yolov8m.pt data=data.yaml  epochs=2 imgsz=1920 batch=2
 yolo task=detect mode=predict model=best_02_12.pt conf=0.20 source=videos/clips/sample_atp_rallies/sample_atp_rallies_1.mp4 show=true  
+yolo task=detect mode=predict model=best_02_16.pt conf=0.20 source=videos/clips/roland_garros/roland_garros_4.mp4 save=true 
 python3 track.py --source ../videos/clips/sample_atp_rallies/sample_atp_rallies_7.mp4 --yolo-weights ../best_02_12.pt --tracking-method strongsort --save-vid
+
+
 
 
 
