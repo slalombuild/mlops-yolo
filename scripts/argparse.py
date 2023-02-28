@@ -37,6 +37,23 @@ def create_parser():
         required=True,
         help="If true a new model will be trained",
     )
+
+    model_trainer_parse.add_argument(
+        "--register_model",
+        metavar="register_model",
+        type=str2bool,
+        required=True,
+        help="If true a a model will be registered",
+    )
+
+    model_trainer_parse.add_argument(
+        "--model_path",
+        metavar="model_path",
+        type=str,
+        required=False,
+        help="A relative path to the model that will be registered. This will only be applied if training is set to false",
+    )
+
     model_trainer_parse.add_argument(
         "--remove_logs",
         metavar="remove_logs",

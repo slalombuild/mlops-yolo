@@ -1,6 +1,7 @@
 from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
 from scripts.train import train_model
+from scripts.mlops.register_model import register_model
 import sys
 import logging
 import json
@@ -64,8 +65,19 @@ def main():
         logging.info(
             "Starting a training job. For details around configurations see 'config/model_config.yaml"
         )
-        train_model(dataset_dir=dataset_dir, **training_params)
+        model = train_model(dataset_dir=dataset_dir, **training_params)
         logging.info("Training complete.")
+    if args.register_model:
+        logging.info(
+            f"Registering the model: {model.trainer.save_dir if args.train_model else args.model_path}"
+        )
+        # Register the model
+        register_model(
+        experiment_name="BestTennisDetector",
+        model_name="TennisDetector",
+        save_dir=model.trainer.save_dir if args.train_model else args.model_path)
+
+        
 
 
 if __name__ == "__main__":
