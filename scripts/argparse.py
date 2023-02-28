@@ -51,7 +51,7 @@ def create_parser():
         metavar="model_path",
         type=str,
         required=False,
-        help="A relative path to the model that will be registered. This will only be applied if training is set to false",
+        help="A equvalent path of the outputs of the YOLO library in the 'run/train' directory. This will only be applied if training is set to false",
     )
 
     model_trainer_parse.add_argument(

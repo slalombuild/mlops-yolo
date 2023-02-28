@@ -6,6 +6,7 @@ from pathlib import Path
 import torch
 import csv
 import yaml
+import logging
 from sys import version_info
 from scripts.mlops import model_wrapper
 from scripts.mlops.model_wrapper import TennisDetectorWrapper
@@ -44,6 +45,38 @@ def log_metrics(save_dir):
                 mlflow.log_metrics(updated_metrics)
 
 
+
+def get_path_w_extension(path,extension, ignore_files = []):
+    logging.debug(f"Path: {path}")
+    logging.debug(f"Extension: {extension}")
+    if isinstance(path, str):
+        abs_path = os.path.abspath(path)
+    elif isinstance(path, Path):
+        abs_path = path.absolute()
+    else:
+        return f"Error: Path {path} is not valid."
+
+    if not os.path.exists(abs_path):
+        return f"Error: Path {abs_path} does not exist."
+    
+    if os.path.isdir(abs_path):
+        pt_files = []
+        for root, dirs, files in os.walk(abs_path):
+            for file in files:
+                if file.endswith(extension) and os.path.basename(file) not in ignore_files:
+                    pt_files.append(os.path.join(root, file))
+        if len(pt_files) == 1:
+            return pt_files[0]
+        elif len(pt_files) > 1:
+            return f"Error: Multiple {extension} files found in directory {abs_path}. Please specify a more specific path."
+        else:
+            return f"Error: No {extension} files found in directory {abs_path}."
+    elif os.path.isfile(abs_path) and abs_path.endswith(extension):
+        return abs_path
+    else:
+        return f"Error: Path {abs_path} is not a valid directory or {extension} file."
+
+
 def register_model(experiment_name: str, model_name: str, save_dir: Path):
     """Registers a model with mlflow
 
@@ -52,8 +85,11 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         model_name (str): Name that will be registered with Mlflow
         save_dir (Path): Path object where the results of the Yolo model are saved. I.e 'runs' directory
     """
-    model_path = save_dir / "weights/best.pt"
-    artifacts = {"path": model_path.absolute().as_posix()}
+    save_dir = Path(save_dir)
+    logging.debug(f"Save Directory: {save_dir}")
+    
+    model_path = get_path_w_extension(path = save_dir, extension='.pt', ignore_files= ["last.pt"])
+    artifacts = {"path": model_path}
 
     model = TennisDetectorWrapper()
 
@@ -61,7 +97,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
 
     cloudpickle.register_pickle_by_value(model_wrapper)
 
-    with mlflow.start_run(experiment_id=exp_id):
+    with mlflow.start_run(experiment_id=exp_id) as run:
         # Log some params
         with open(save_dir / "args.yaml", "r") as param_file:
             params = yaml.safe_load(param_file)
@@ -71,12 +107,17 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
             mlflow.log_artifact(file)
         pip_reqs = read_lines('requirements.txt')
         mlflow.pyfunc.log_model(
-            "model_env",
+            "model",
             python_model=model,
             pip_requirements=pip_reqs,
             artifacts=artifacts,
             registered_model_name=model_name,
         )
+        run_id = run.info.run_uuid
+        experiment_id = run.info.experiment_id
+        mlflow.end_run()
+        logging.info(f'artifact_uri = {mlflow.get_artifact_uri()}')
+        logging.info(f'runID: {run_id}')
 
 def main():
     pass # TODO

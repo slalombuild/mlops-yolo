@@ -13,6 +13,11 @@ import yaml
 # Execute the parse_args() method to get arguments
 args = create_parser().parse_args()
 
+if args.train_model == True and args.register_model == True and args.model_path != None:
+    raise ValueError("Argument: --model_path can only be specified if the argument 'train_model' is set to False when a model will be registered")
+if args.train_model == False and args.register_model == True and args.model_path == None:
+    raise ValueError("If the argument: 'train_model' is set to False then the optional argument --model_path must be specified when a model will be registered")
+
 # Clean log directory
 if args.remove_logs:
     for filename in glob.glob("log/*.log*"):
