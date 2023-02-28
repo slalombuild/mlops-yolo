@@ -1,14 +1,14 @@
 import mlflow
 import torch
+from ultralytics import YOLO
 
+YOLO()
 
 class TennisDetectorWrapper(mlflow.pyfunc.PythonModel):
     def load_context(self, context):
-        self.model = torch.hub.load(
-            "ultralytics/yolov8", "custom", path=context.artifacts["path"]
-        )
+        self.model = YOLO(context.artifacts['path'])
 
     def predict(self, context, img):
-        objs = self.model(img).xywh[0]
+        results = self.model.predict(source=img)
 
-        return objs.numpy()
+        return results
