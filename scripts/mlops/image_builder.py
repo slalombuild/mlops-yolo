@@ -39,5 +39,6 @@ model_uri = f'models:/{name}/{version}'
 # Load the model
 model = mlflow.pyfunc.load_model(model_uri)
 #pdb.set_trace()
-results = model.predict("photos/no-label.jpg")
+data = {"source":"photos/no-label.jpg"}
+results = model.predict(data = data)
 print(results)

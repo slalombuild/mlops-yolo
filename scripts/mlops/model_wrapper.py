@@ -7,7 +7,7 @@ class TennisDetectorWrapper(mlflow.pyfunc.PythonModel):
         logging.info(f"context.artifacts[path]:{context.artifacts['path']}")
         self.model = YOLO(context.artifacts['path'])
 
-    def predict(self, context, img):
-        results = self.model.predict(source=img)
+    def predict(self, context, data):
+        results = self.model.predict(**data)
 
         return results
