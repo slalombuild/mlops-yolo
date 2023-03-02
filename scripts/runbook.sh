@@ -23,3 +23,14 @@ python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data True --train_m
  mlflow ui
 pkill -f gunicorn
 python -m scripts.mlops.register_model --name BestTennisDetector --model ultralytics/runs/detect/train/weights/best.pt --model-name TennisDetector
+mlflow sagemaker build-and-push-container --no-push 
+
+#MLFLOW build a sagemaker compatible docker container
+mlflow models build-docker --name "tennisdetector"
+mlflow deployments run-local --target sagemaker \
+        --name my-local-deployment \
+        --model-uri "mlruns/979019735959282175/9c678b837d9141cf902a5e184f91482c/artifacts/model" \
+        --flavor python_function \
+        -C port=4000 \
+        -C image="tennisdetector"
+curl -v  -X POST -H "Content-Type: application/json" -d @image.json http://localhost:4000/invocations
