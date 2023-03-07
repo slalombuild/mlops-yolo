@@ -15,7 +15,11 @@ yolo task=detect mode=predict model=best_02_16.pt conf=0.50 source=videos\roland
 python track.py --source ..\videos\roland_garros_full_clip.mp4 --yolo-weights ..\best_02_16.pt --tracking-method strongsort --imgsz 1920  --max-det 3 --conf-thres .35 --show-vid
 
 #Main execution
-python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data True --train_model True --remove_logs False --logging_level INFO
+#Train a model but do not register
+python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data False --train_model True --register_model False  --remove_logs False --logging_level INFO
+#Register a  model but do not train.
+python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data False --train_model False --register_model True --model_path "runs/detect/train"  --remove_logs False --logging_level INFO
+
 
 
 # MLFLOW
@@ -29,8 +33,9 @@ mlflow sagemaker build-and-push-container --no-push
 mlflow models build-docker --name "tennisdetector"
 mlflow deployments run-local --target sagemaker \
         --name my-local-deployment \
-        --model-uri "mlruns/979019735959282175/9c678b837d9141cf902a5e184f91482c/artifacts/model" \
+        --model-uri "mlruns/683127219138585204/dd655572a17c4add9f10f9243a4e5c46/artifacts/model" \
         --flavor python_function \
         -C port=4000 \
         -C image="tennisdetector"
-curl -v  -X POST -H "Content-Type: application/json" -d @image.json http://localhost:4000/invocations
+curl -v  -H "Content-Type: application/json" -d @image.json http://localhost:4000/invocations
+docker exec -it container_name bash  

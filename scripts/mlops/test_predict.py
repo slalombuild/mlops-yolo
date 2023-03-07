@@ -24,7 +24,7 @@ model_uri = f'models:/{name}/{version}'
 # Load the model
 model = mlflow.pyfunc.load_model(model_uri)
 
-data = {"source":"https://raw.githubusercontent.com/lhuddleston16/yolo_tennis/main/photos/court_detection.jpg","show":True,"save":True}
+data = {"source":"https://raw.githubusercontent.com/lhuddleston16/yolo_tennis/main/photos/court_detection.jpg"}
 results = model.predict(data = data)
 print(results)
 

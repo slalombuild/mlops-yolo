@@ -1,4 +1,4 @@
-from mlflow.models import build_docker
+
 from mlflow.deployments import get_deploy_client
 import mlflow
 import logging
@@ -14,16 +14,15 @@ version = client.get_latest_versions(name=name)[0].version
 model_uri = f'models:/{name}/{version}'
 logging.info(f'Model URI: {model_uri}')
 print(model_uri)
-# build_docker(name="mlflow-pyfunc")
+mlflow.models.build_docker(name="tennisdetector")
 
-# client = get_deploy_client("sagemaker")
-# #pdb.set_trace()
-# client.run_local(
-#     name="my-local-deployment",
-#     model_uri=model_uri,
-#     flavor="python_function",
-#     config={
-#         "port": 5000,
-#         "image": "mlflow-pyfunc",
-#     }
-# )
+client = get_deploy_client("sagemaker")
+mlflow.sagemaker.run_local(
+    name="local_tennisdetector",
+    model_uri=model_uri,
+    flavor="python_function",
+    config={
+        "port": 4000,
+        "image": "tennisdetector",
+    }
+)
