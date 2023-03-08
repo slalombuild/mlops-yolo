@@ -12,7 +12,15 @@ from scripts.mlops.model_wrapper import YoloWrapper
 mlflow.set_tracking_uri("./mlruns")
 
 
-def get_experiment_id(name):
+def get_experiment_id(name: str):
+    """Retrieve experiment if registered name, else create experiment.
+
+    Args:
+        name (str): Mlflow experiment name
+
+    Returns:
+        str: Mlfow experiment id
+    """
     exp = mlflow.get_experiment_by_name(name)
     if exp is None:
         exp_id = mlflow.create_experiment(name)
@@ -20,12 +28,26 @@ def get_experiment_id(name):
     return exp.experiment_id
 
 
-def read_lines(path):
+def read_lines(path: str):
+    """Given a path to a file, this function reads file, seperates the lines and returns a list of those separated lines.
+
+    Args:
+        path (str): Path to file
+
+    Returns:
+        list: List made of of file lines
+    """
     with open(path) as f:
         return f.read().splitlines()
 
 
-def log_metrics(save_dir):
+def log_metrics(save_dir: str):
+    """Log metrics to Mlflow from the Yolo model outputs.
+
+    Args:
+        save_dir (str): Path to Yolo save directory, i.e - runs/train
+    """
+    save_dir = Path(save_dir)
     with open(save_dir / "results.csv", "r") as csv_file:
         metrics_reader = csv.DictReader(csv_file)
         for metrics in metrics_reader:
@@ -43,7 +65,19 @@ def log_metrics(save_dir):
                 mlflow.log_metrics(updated_metrics)
 
 
-def get_path_w_extension(path, extension, ignore_files=[]):
+def get_path_w_extension(
+    path: str, extension: str, limit: int, ignore_files: list = []
+):
+    """Finds files that match extensions and returns a list of those files that match up to thhe limit while ignoring files in the ignore_files list.
+
+    Args:
+        path (str): Directory to search for files in.
+        extension (str): Type of extension to look for.
+        ignore_files (list, optional): Specify list of files that will be ignored. Defaults to [].
+
+    Returns:
+        list: List of paths to files with extensions.
+    """
     logging.debug(f"Path: {path}")
     logging.debug(f"Extension: {extension}")
     if isinstance(path, str):
@@ -51,10 +85,10 @@ def get_path_w_extension(path, extension, ignore_files=[]):
     elif isinstance(path, Path):
         abs_path = path.absolute()
     else:
-        return f"Error: Path {path} is not valid."
+        raise ValueError(f"Error: Path {path} is not valid.")
 
     if not os.path.exists(abs_path):
-        return f"Error: Path {abs_path} does not exist."
+        raise ValueError(f"Error: Path {abs_path} does not exist.")
 
     if os.path.isdir(abs_path):
         pt_files = []
@@ -65,16 +99,22 @@ def get_path_w_extension(path, extension, ignore_files=[]):
                     and os.path.basename(file) not in ignore_files
                 ):
                     pt_files.append(os.path.join(root, file))
-        if len(pt_files) == 1:
-            return pt_files[0]
-        if len(pt_files) > 1:
-            return f"Error: Multiple {extension} files found in directory {abs_path}. Please specify a more specific path."
+        if len(pt_files) <= limit and len(pt_files) > 0:
+            return pt_files
+        if len(pt_files) > limit:
+            raise ValueError(
+                f"Error: Given limit: {limit} while number of files found with {extension} extension in directory {abs_path} is {len(pt_files)}"
+            )
         else:
-            return f"Error: No {extension} files found in directory {abs_path}."
+            raise FileNotFoundError(
+                f"Error: No {extension} files found in directory {abs_path}."
+            )
     elif os.path.isfile(abs_path) and abs_path.endswith(extension):
-        return abs_path
+        return [abs_path]
     else:
-        return f"Error: Path {abs_path} is not a valid directory or {extension} file."
+        raise ValueError(
+            f"Error: Path {abs_path} is not a valid directory or {extension} file."
+        )
 
 
 def register_model(experiment_name: str, model_name: str, save_dir: Path):
@@ -89,8 +129,8 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
     logging.debug(f"Save Directory: {save_dir}")
 
     model_path = get_path_w_extension(
-        path=save_dir, extension=".pt", ignore_files=["last.pt"]
-    )
+        path=save_dir, extension=".pt", limit=1, ignore_files=["last.pt"]
+    )[0]
     artifacts = {"path": model_path}
 
     model = YoloWrapper()
