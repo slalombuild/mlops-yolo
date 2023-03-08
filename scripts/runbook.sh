@@ -29,6 +29,7 @@ pkill -f gunicorn
 python -m scripts.mlops.register_model --name BestTennisDetector --model ultralytics/runs/detect/train/weights/best.pt --model-name TennisDetector
 mlflow sagemaker build-and-push-container --no-push 
 
+
 #MLFLOW build a sagemaker compatible docker container
 mlflow models build-docker --name "tennisdetector"
 mlflow deployments run-local --target sagemaker \
@@ -37,5 +38,6 @@ mlflow deployments run-local --target sagemaker \
         --flavor python_function \
         -C port=4000 \
         -C image="tennisdetector"
-curl -v  -H "Content-Type: application/json" -d @image.json http://localhost:4000/invocations
-docker exec -it container_name bash  
+curl -v  -H "Content-Type: application/json" -d @tests/test_data/image.json http://localhost:4000/invocations
+docker exec -it container_name bash 
+docker cp filepath container_name:filepath

@@ -1,0 +1,5 @@
+{
+    "inputs": 
+        {"source":"https://raw.githubusercontent.com/lhuddleston16/yolo_tennis/main/photos/court_detection.jpg","imgsz":"1920","save_txt":"True"}
+    
+}
