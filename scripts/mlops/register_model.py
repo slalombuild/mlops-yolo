@@ -1,15 +1,13 @@
-import argparse
-import cloudpickle
-import mlflow
+"Registers model in MLFlow"
 import os
 from pathlib import Path
-import torch
 import csv
-import yaml
 import logging
-from sys import version_info
+import yaml
+import cloudpickle
+import mlflow
 from scripts.mlops import model_wrapper
-from scripts.mlops.model_wrapper import TennisDetectorWrapper
+from scripts.mlops.model_wrapper import YoloWrapper
 
 mlflow.set_tracking_uri("./mlruns")
 
@@ -69,7 +67,7 @@ def get_path_w_extension(path, extension, ignore_files=[]):
                     pt_files.append(os.path.join(root, file))
         if len(pt_files) == 1:
             return pt_files[0]
-        elif len(pt_files) > 1:
+        if len(pt_files) > 1:
             return f"Error: Multiple {extension} files found in directory {abs_path}. Please specify a more specific path."
         else:
             return f"Error: No {extension} files found in directory {abs_path}."
@@ -95,7 +93,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
     )
     artifacts = {"path": model_path}
 
-    model = TennisDetectorWrapper()
+    model = YoloWrapper()
 
     exp_id = get_experiment_id(experiment_name)
 
@@ -122,6 +120,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         mlflow.end_run()
         logging.info(f"artifact_uri = {mlflow.get_artifact_uri()}")
         logging.info(f"runID: {run_id}")
+        logging.info(f"experiment_id: {experiment_id}")
 
 
 def main():

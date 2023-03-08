@@ -1,7 +1,6 @@
 from mlflow.deployments import get_deploy_client
 import mlflow
 import logging
-import pdb
 
 client = mlflow.MlflowClient()
 name = "TennisDetector"
