@@ -6,11 +6,9 @@ The goal of this analysis is to offer a image detection solution to track player
 - Once annotations are completed, the data is export out of Roboflow in Yolov5 format. Exports create `test`, `train`, and `valid` folders as well as a `data.yaml` to be passed when training.
 
 ### Output
-Photo before model inference:
-- ![No Label](/photos/no-label.jpg)
+Video after model inference:
+- ![Object detection](/photos/tennis_object_detection.gif)
 
-Photo after model inference:
-- ![Label](/photos/label.jpg)
 ### Resources
 - https://www.youtube.com/watch?v=QCG8QMhga9k&ab_channel=Roboflow 
 - https://github.com/roboflow/notebooks/blob/main/notebooks/how-to-track-football-players.ipynb
