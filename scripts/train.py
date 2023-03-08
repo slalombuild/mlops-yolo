@@ -29,4 +29,3 @@ def train_model(dataset_dir: str, model: str, epochs: int, batch: int, imgsz: in
     # Train the model
     model.train(data=data_path, epochs=epochs, batch=batch, imgsz=imgsz, device=device)
     return model
-    

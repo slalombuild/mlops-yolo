@@ -1,18 +1,17 @@
-
 from mlflow.deployments import get_deploy_client
 import mlflow
 import logging
 import pdb
 
 client = mlflow.MlflowClient()
-name = 'TennisDetector'
+name = "TennisDetector"
 
 # Get the latest version for the model
 version = client.get_latest_versions(name=name)[0].version
 
 # Construct the model URI
-model_uri = f'models:/{name}/{version}'
-logging.info(f'Model URI: {model_uri}')
+model_uri = f"models:/{name}/{version}"
+logging.info(f"Model URI: {model_uri}")
 print(model_uri)
 mlflow.models.build_docker(name="tennisdetector")
 
@@ -24,5 +23,5 @@ mlflow.sagemaker.run_local(
     config={
         "port": 4000,
         "image": "tennisdetector",
-    }
+    },
 )

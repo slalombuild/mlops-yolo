@@ -45,8 +45,7 @@ def log_metrics(save_dir):
                 mlflow.log_metrics(updated_metrics)
 
 
-
-def get_path_w_extension(path,extension, ignore_files = []):
+def get_path_w_extension(path, extension, ignore_files=[]):
     logging.debug(f"Path: {path}")
     logging.debug(f"Extension: {extension}")
     if isinstance(path, str):
@@ -58,12 +57,15 @@ def get_path_w_extension(path,extension, ignore_files = []):
 
     if not os.path.exists(abs_path):
         return f"Error: Path {abs_path} does not exist."
-    
+
     if os.path.isdir(abs_path):
         pt_files = []
         for root, dirs, files in os.walk(abs_path):
             for file in files:
-                if file.endswith(extension) and os.path.basename(file) not in ignore_files:
+                if (
+                    file.endswith(extension)
+                    and os.path.basename(file) not in ignore_files
+                ):
                     pt_files.append(os.path.join(root, file))
         if len(pt_files) == 1:
             return pt_files[0]
@@ -87,8 +89,10 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
     """
     save_dir = Path(save_dir)
     logging.debug(f"Save Directory: {save_dir}")
-    
-    model_path = get_path_w_extension(path = save_dir, extension='.pt', ignore_files= ["last.pt"])
+
+    model_path = get_path_w_extension(
+        path=save_dir, extension=".pt", ignore_files=["last.pt"]
+    )
     artifacts = {"path": model_path}
 
     model = TennisDetectorWrapper()
@@ -105,7 +109,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         log_metrics(save_dir)
         for file in sorted(save_dir.glob("*.png")):
             mlflow.log_artifact(file)
-        pip_reqs = read_lines('requirements.txt')
+        pip_reqs = read_lines("requirements.txt")
         mlflow.pyfunc.log_model(
             "model",
             python_model=model,
@@ -116,20 +120,13 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         run_id = run.info.run_uuid
         experiment_id = run.info.experiment_id
         mlflow.end_run()
-        logging.info(f'artifact_uri = {mlflow.get_artifact_uri()}')
-        logging.info(f'runID: {run_id}')
+        logging.info(f"artifact_uri = {mlflow.get_artifact_uri()}")
+        logging.info(f"runID: {run_id}")
+
 
 def main():
-    pass # TODO
+    pass  # TODO
+
+
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-
-
-
-        
