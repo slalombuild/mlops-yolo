@@ -13,7 +13,7 @@ To retrieve the data from Roboflow a Roboflow API key will be needed. Once this 
 Model training was done both on a CPU and a cuda enabled enviroment to interact with a GPU. Some of the best models can be found under the models folder. Later dated models are usually better models. To run your own training session and nothing else simply run:
 - ```python -m main --get_data False --train_model True --register_model False  --remove_logs False --logging_level INFO``` 
 ### MLFlow: Registry and Tracking:
-We use MLFlow to register and track our models. To track you Yolov8 model and register it, simply call:
+We use MLFlow to register and track our models. To track you Yolov8 model and register the model, simply call:
 - ```python -m main --get_data False --train_model False --register_model True  --model_path <path to mode> --remove_logs False --logging_level INFO``` 
 ### Output
 Video after model inference:
