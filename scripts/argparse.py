@@ -13,21 +13,20 @@ def create_parser():
     )
 
     # Add the arguments
-
-    model_trainer_parse.add_argument(
-        "--roboflow_api_key",
-        metavar="roboflow_api_key",
-        type=str,
-        required=True,
-        help="API key to access Roboflow",
-    )
-
     model_trainer_parse.add_argument(
         "--get_data",
         metavar="get_data",
         type=str2bool,
         required=True,
         help="If true new data will be downloaded.",
+    )
+
+    model_trainer_parse.add_argument(
+        "--roboflow_api_key",
+        metavar="roboflow_api_key",
+        type=str,
+        required=False,
+        help="API key to access Roboflow",
     )
 
     model_trainer_parse.add_argument(

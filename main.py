@@ -63,9 +63,12 @@ def main():
         f"Training parameters: {json.dumps(training_params, indent=4, sort_keys=True)}"
     )
     if args.get_data:
-        logging.info("Starting to download training, validation and test images")
-        get_roboflow_data(api_key=args.roboflow_api_key, **roboflow_params)
-        logging.info(f"Photo download complete at: {dataset_dir}")
+        if args.roboflow_api_key:
+            logging.info("Starting to download training, validation and test images")
+            get_roboflow_data(api_key=args.roboflow_api_key, **roboflow_params)
+            logging.info(f"Photo download complete at: {dataset_dir}")
+        else:
+            raise ValueError("Specify a Roboflow API key if parameter 'get_data' is set to True")
     if args.train_model:
         logging.info(
             "Starting a training job. For details around configurations see 'config/model_config.yaml"
