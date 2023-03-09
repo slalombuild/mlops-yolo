@@ -19,7 +19,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python 3.10
+    - name: Set up Python 3.9.13
       uses: actions/setup-python@v3
       with:
         python-version: "3.9.13"
@@ -37,3 +37,14 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Pull Data
+      run: |
+        python main.py  --get_data True --roboflow_api_key ${{secrets.ROBOFLOW_API_KEY}} --train_model False --register_model False  --remove_logs False --logging_level INFO`
+    - name: Train Model
+      run: |
+        python main.py  --get_data False --train_model True --register_model False  --remove_logs False --logging_level INFO`
+    - name: Register Model
+      run: |
+        python main.py  --get_data False --train_model False --register_model True  --remove_logs False --logging_level INFO`
+
+
