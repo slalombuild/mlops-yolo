@@ -45,6 +45,6 @@ jobs:
         python main.py  --get_data False --train_model True --register_model False  --remove_logs False --logging_level INFO
     - name: Register Model
       run: |
-        python main.py  --get_data False --train_model False --register_model True  --remove_logs False --logging_level INFO
+        python main.py  --get_data False --train_model False --register_model True  --model_path "runs/detect/train" --remove_logs False --logging_level INFO
 
 
