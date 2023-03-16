@@ -1,4 +1,4 @@
-## Image detection on Tennis Player
+## Image detection for tennis players and balls
 The goal of this analysis is to offer a image detection solution to track tennis players and tennis balls. We want to be able to track these objects so we can create metrics for total distance run,ball speed, and court position.
 
 ### Gathering Images

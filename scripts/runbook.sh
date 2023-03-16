@@ -16,9 +16,9 @@ python track.py --source ..\videos\roland_garros_full_clip.mp4 --yolo-weights ..
 
 #Main execution
 #Train a model but do not register
-python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data False --train_model True --register_model False  --remove_logs False --logging_level INFO
+python -m main --roboflow_api_key $api_key --get_data False --train_model True --register_model False --build_image False   --remove_logs False --logging_level INFO
 #Register a  model but do not train.
-python -m main --roboflow_api_key E1UAwvyKe8uHH4eJGFid --get_data False --train_model False --register_model True --model_path "runs/detect/train"  --remove_logs False --logging_level INFO
+python -m main --roboflow_api_key $api_key --get_data False --train_model False --register_model True --model_path "runs/detect/train" --build_image False --remove_logs False --logging_level INFO
 
 
 

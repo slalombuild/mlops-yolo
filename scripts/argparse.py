@@ -18,6 +18,7 @@ def create_parser():
         metavar="get_data",
         type=str2bool,
         required=True,
+        choices={True, False},
         help="If true new data will be downloaded.",
     )
 
@@ -34,6 +35,7 @@ def create_parser():
         metavar="train_model",
         type=str2bool,
         required=True,
+        choices={True, False},
         help="If true a new model will be trained",
     )
 
@@ -42,6 +44,7 @@ def create_parser():
         metavar="register_model",
         type=str2bool,
         required=True,
+        choices={True, False},
         help="If true a a model will be registered",
     )
 
@@ -51,6 +54,15 @@ def create_parser():
         type=str,
         required=False,
         help="A equvalent path of the outputs of the YOLO library in the 'run/train' directory. This will only be applied if training is set to false",
+    )
+
+    model_trainer_parse.add_argument(
+        "--build_image",
+        metavar="build_image",
+        type=str2bool,
+        required=True,
+        choices={True, False},
+        help="If true a a docker image will be built from the model",
     )
 
     model_trainer_parse.add_argument(

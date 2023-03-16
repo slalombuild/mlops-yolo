@@ -16,7 +16,6 @@ def build_and_run_sagemaker_image(model_name:str,image_name:str,version:int, doc
 
     # Get the latest version for the model
     version = client.get_latest_versions(name=model_name)[0].version
-    client.get_latest_versions(name)
     # Construct the model URI
     model_uri = f"models:/{model_name}/{version}"
     logging.info(f"Model URI: {model_uri}")

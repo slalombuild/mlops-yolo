@@ -11,3 +11,9 @@ training_params:
   epochs: 1
   batch: 5
   imgsz: 640
+mlflow_params:
+  experiment_name: BestTennisDetector
+  model_name: TennisDetector
+  image_name: tennisdetector
+  version: 0
+  docker_port: 4000

@@ -2,6 +2,7 @@ from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
 from scripts.train import train_model
 from scripts.mlops.register_model import register_model
+from scripts.mlops.mlflow_build_image import build_and_run_sagemaker_image
 import sys
 import logging
 import json
@@ -62,6 +63,10 @@ def main():
     logging.debug(
         f"Training parameters: {json.dumps(training_params, indent=4, sort_keys=True)}"
     )
+    mlflow_params = yaml_inputs["mlflow_params"]
+    logging.debug(
+        f"MLflow parameters: {json.dumps(mlflow_params, indent=4, sort_keys=True)}"
+    )
     if args.get_data:
         if args.roboflow_api_key:
             logging.info("Starting to download training, validation and test images")
@@ -81,11 +86,14 @@ def main():
         )
         # Register the model
         register_model(
-        experiment_name="BestTennisDetector",
-        model_name="TennisDetector",
+        experiment_name=mlflow_params["experiment_name"],
+        model_name=mlflow_params["model_name"],
         save_dir=model.trainer.save_dir if args.train_model else args.model_path)
-
-        
+    if args.build_image:
+        logging.info(
+            f"Building an image for model: {mlflow_params['model_name']} "
+        )
+        build_and_run_sagemaker_image(mlflow_params['model_name'],mlflow_params['image_name'],mlflow_params['version'],mlflow_params['docker_port'],)
 
 
 if __name__ == "__main__":
