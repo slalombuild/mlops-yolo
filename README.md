@@ -1,4 +1,4 @@
-## Image detection for tennis players and balls
+### Image detection for tennis players and balls
 The goal of this analysis is to offer a image detection solution to track tennis players and tennis balls. We want to be able to track these objects so we can create metrics for total distance run,ball speed, and court position.
 
 ### Gathering Images
@@ -18,6 +18,10 @@ We use MLFlow to register and track our models. To track you Yolov8 model and re
 ### Output
 Video after model inference:
 - ![Object detection](/photos/tennis_object_detection.gif)
+
+
+### Getting Started With This Repo
+
 
 ### Resources
 - https://www.youtube.com/watch?v=QCG8QMhga9k&ab_channel=Roboflow 
