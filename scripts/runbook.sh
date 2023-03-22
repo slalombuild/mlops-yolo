@@ -41,3 +41,9 @@ mlflow deployments run-local --target sagemaker \
 curl -v  -H "Content-Type: application/json" -d @tests/test_data/image.json http://localhost:4000/invocations
 docker exec -it container_name bash 
 docker cp filepath container_name:filepath
+
+# Running in a container
+docker build -t yolo_ops .
+docker image prune
+docker run --name yolo_container yolo_ops --roboflow_api_key $api_key --get_data True --train_model True --register_model True --build_image False   --remove_logs False --logging_level INFO
+docker container prune
