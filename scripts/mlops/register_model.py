@@ -9,8 +9,8 @@ import mlflow
 from scripts.mlops import model_wrapper
 from scripts.mlops.model_wrapper import YoloWrapper
 
-mlflow.set_tracking_uri("./mlruns")
-
+#mlflow.set_tracking_uri("./mlruns")
+mlflow.set_tracking_uri('http://MLflo-MLFLO-19C0X7MMXRQM2-32c9648eaf8df8c9.elb.us-east-1.amazonaws.com:80')
 
 def get_experiment_id(name: str):
     """Retrieve experiment if registered name, else create experiment.
