@@ -1,6 +1,7 @@
 from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
 from scripts.train import train_model
+from scripts.model_evaluation import evaluate_model
 from scripts.mlops.register_model import register_model
 from scripts.mlops.mlflow_build_image import build_and_run_sagemaker_image
 import sys
@@ -14,10 +15,11 @@ import yaml
 # Execute the parse_args() method to get arguments
 args = create_parser().parse_args()
 
-if args.train_model == True and args.register_model == True and args.model_path != None:
-    raise ValueError("Argument: --model_path can only be specified if the argument 'train_model' is set to False when a model will be registered")
-if args.train_model == False and args.register_model == True and args.model_path == None:
-    raise ValueError("If the argument: 'train_model' is set to False then the optional argument --model_path must be specified when a model will be registered")
+if args.train_model == True and (args.register_model == True or args.model_evaluation == True)  and args.model_path != None:
+    raise ValueError("Argument: --model_path can only be specified if the argument 'train_model' is set to False when a model will be registered or evaluated")
+if args.train_model == False and (args.register_model == True or args.model_evaluation == True) and args.model_path == None:
+    raise ValueError("If the argument: 'train_model' is set to False then the optional argument --model_path must be specified when a model will be registered or evaluated")
+
 
 # Clean log directory
 if args.remove_logs:
@@ -80,6 +82,12 @@ def main():
         )
         model = train_model(dataset_dir=dataset_dir, **training_params)
         logging.info("Training complete.")
+
+    if args.model_evaluation:
+        logging.info(
+            f"Evaluating the model: {model.trainer.save_dir if args.train_model else args.model_path}"
+        )
+        #evaluate_model()
     if args.register_model:
         logging.info(
             f"Registering the model: {model.trainer.save_dir if args.train_model else args.model_path}"

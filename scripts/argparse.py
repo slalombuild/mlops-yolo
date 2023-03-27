@@ -40,6 +40,15 @@ def create_parser():
     )
 
     model_trainer_parse.add_argument(
+        "--model_evaluation",
+        metavar="model_evaluation",
+        type=str2bool,
+        required=True,
+        choices={True, False},
+        help="If true the model will be evaluated",
+    )
+
+    model_trainer_parse.add_argument(
         "--register_model",
         metavar="register_model",
         type=str2bool,

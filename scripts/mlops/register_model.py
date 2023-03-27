@@ -9,8 +9,8 @@ import mlflow
 from scripts.mlops import model_wrapper
 from scripts.mlops.model_wrapper import YoloWrapper
 
+#mlflow.set_tracking_uri('http://MLflo-MLFLO-19C0X7MMXRQM2-32c9648eaf8df8c9.elb.us-east-1.amazonaws.com:80')
 mlflow.set_tracking_uri("./mlruns")
-
 
 def get_experiment_id(name: str):
     """Retrieve experiment if registered name, else create experiment.
@@ -41,11 +41,12 @@ def read_lines(path: str):
         return f.read().splitlines()
 
 
-def log_metrics(save_dir: str):
+def log_metrics(save_dir: str,log_results:bool = True):
     """Log metrics to Mlflow from the Yolo model outputs.
 
     Args:
         save_dir (str): Path to Yolo save directory, i.e - runs/train
+        log_results (bool): If True, the results are logged to MLflow server
     """
     save_dir = Path(save_dir)
     with open(save_dir / "results.csv", "r") as csv_file:
@@ -62,7 +63,10 @@ def log_metrics(save_dir: str):
                 key = key.replace("(B)", "")
                 # Add the updated key-value pair to the updated row dictionary
                 updated_metrics[key] = float(value)
-                mlflow.log_metrics(updated_metrics)
+                if log_results:
+                    mlflow.log_metrics(updated_metrics)
+                print(updated_metrics)
+                return updated_metrics
 
 
 def get_path_w_extension(
@@ -161,6 +165,7 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         logging.info(f"artifact_uri = {mlflow.get_artifact_uri()}")
         logging.info(f"runID: {run_id}")
         logging.info(f"experiment_id: {experiment_id}")
+        logging.info(f"MLflow URI: {mlflow.get_tracking_uri()}")
 
 
 def main():
