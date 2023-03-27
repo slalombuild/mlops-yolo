@@ -2,8 +2,8 @@ from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
 from scripts.train import train_model
 from scripts.model_evaluation import evaluate_model
-from scripts.mlops.register_model import register_model
-from scripts.mlops.mlflow_build_image import build_and_run_sagemaker_image
+from scripts.mlflow_utils.register_model import register_model
+from scripts.mlflow_utils.mlflow_build_image import build_and_run_sagemaker_image
 import sys
 import logging
 import json

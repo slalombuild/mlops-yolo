@@ -6,8 +6,8 @@ import logging
 import yaml
 import cloudpickle
 import mlflow
-from scripts.mlops import model_wrapper
-from scripts.mlops.model_wrapper import YoloWrapper
+from scripts.mlflow_utils import model_wrapper
+from scripts.mlflow_utils.model_wrapper import YoloWrapper
 
 #mlflow.set_tracking_uri("./mlruns")
 mlflow.set_tracking_uri('http://MLflo-MLFLO-19C0X7MMXRQM2-32c9648eaf8df8c9.elb.us-east-1.amazonaws.com:80')
@@ -65,8 +65,7 @@ def log_metrics(save_dir: str,log_results:bool = True):
                 updated_metrics[key] = float(value)
                 if log_results:
                     mlflow.log_metrics(updated_metrics)
-                print(updated_metrics)
-                return updated_metrics
+    return updated_metrics
 
 
 def get_path_w_extension(

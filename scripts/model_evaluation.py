@@ -1,7 +1,7 @@
 
 import mlflow
 import yaml
-from scripts.mlops.register_model import log_metrics
+from scripts.mlflow_utils.register_model import log_metrics
 
 def evaluate_model(save_dir,run_id, config_path):
     # Load the model's metrics from MLflow
