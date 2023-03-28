@@ -11,6 +11,11 @@ training_params:
   epochs: 1
   batch: 5
   imgsz: 640
+evaluation_thresholds:
+  mAP50: 0
+  mAP50-95: 0
+  precision: 0
+  recall: 0
 mlflow_params:
   experiment_name: BestTennisDetector
   model_name: TennisDetector

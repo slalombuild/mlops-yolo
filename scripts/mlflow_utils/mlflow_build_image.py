@@ -2,7 +2,10 @@ from mlflow.deployments import get_deploy_client
 import mlflow
 import logging
 
-def build_and_run_sagemaker_image(model_name:str,image_name:str,version:int, docker_port:int):
+
+def build_and_run_sagemaker_image(
+    model_name: str, image_name: str, version: int, docker_port: int
+):
     """Creates a sagemaker compatible docker image and then runs it.
 
     Args:
@@ -23,7 +26,7 @@ def build_and_run_sagemaker_image(model_name:str,image_name:str,version:int, doc
 
     client = get_deploy_client("sagemaker")
     mlflow.sagemaker.run_local(
-        name=image_name+"_local",
+        name=image_name + "_local",
         model_uri=model_uri,
         flavor="python_function",
         config={
@@ -32,7 +35,13 @@ def build_and_run_sagemaker_image(model_name:str,image_name:str,version:int, doc
         },
     )
 
+
 if __name__ == "__main__":
     logging.info("Process Start")
-    build_and_run_sagemaker_image(model_name = "TennisDetector",image_name ="tennisdetector",version = 0, docker_port = 4000)
+    build_and_run_sagemaker_image(
+        model_name="TennisDetector",
+        image_name="tennisdetector",
+        version=0,
+        docker_port=4000,
+    )
     logging.info("Process Complete")

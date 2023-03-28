@@ -9,8 +9,6 @@ import mlflow
 from scripts.mlflow_utils import model_wrapper
 from scripts.mlflow_utils.model_wrapper import YoloWrapper
 
-#mlflow.set_tracking_uri("./mlruns")
-mlflow.set_tracking_uri('http://MLflo-MLFLO-19C0X7MMXRQM2-32c9648eaf8df8c9.elb.us-east-1.amazonaws.com:80')
 
 def get_experiment_id(name: str):
     """Retrieve experiment if registered name, else create experiment.
@@ -41,7 +39,7 @@ def read_lines(path: str):
         return f.read().splitlines()
 
 
-def log_metrics(save_dir: str,log_results:bool = True):
+def log_metrics(save_dir: str, log_results: bool = True):
     """Log metrics to Mlflow from the Yolo model outputs.
 
     Args:
@@ -49,23 +47,36 @@ def log_metrics(save_dir: str,log_results:bool = True):
         log_results (bool): If True, the results are logged to MLflow server
     """
     save_dir = Path(save_dir)
-    with open(save_dir / "results.csv", "r") as csv_file:
-        metrics_reader = csv.DictReader(csv_file)
-        for metrics in metrics_reader:
-            # Create an empty dictionary to store the updated key-value pairs for this row
-            updated_metrics = {}
-            # Iterate through the key-value pairs in this row's dictionary
-            for key, value in metrics.items():
-                # Remove whitespace from the key
-                key = key.strip()
-                value = value.strip()
-                # Remove the pattern '(B)' from the key
-                key = key.replace("(B)", "")
-                # Add the updated key-value pair to the updated row dictionary
-                updated_metrics[key] = float(value)
-                if log_results:
-                    mlflow.log_metrics(updated_metrics)
-    return updated_metrics
+    try:
+        with open(save_dir / "results.csv", "r") as csv_file:
+            metrics_reader = csv.DictReader(csv_file)
+            metrics_list = []
+            for metrics in metrics_reader:
+                # Create an empty dictionary to store the updated key-value pairs for this row
+                updated_metrics = {}
+                # Iterate through the key-value pairs in this row's dictionary
+                for key, value in metrics.items():
+                    # Remove whitespace from the key
+                    key = key.strip()
+                    value = value.strip()
+                    # Remove extra strings in keys
+                    patterns = ["(B)", "metrics/"]
+                    for pattern in patterns:
+                        key = key.replace(pattern, "")
+                    # Add the updated key-value pair to the updated row dictionary
+                    try:
+                        # Add the updated key-value pair to the updated row dictionary
+                        updated_metrics[key] = float(value)
+                    except ValueError:
+                        logging.error(f"ValueError: Could not convert {value} to float.")
+                    metrics_list.append(updated_metrics)
+                    if log_results:
+                        mlflow.log_metrics(updated_metrics)
+        return metrics_list
+    except FileNotFoundError:
+        print(f"FileNotFoundError: Could not find {save_dir / 'results.csv'}.")
+    except IOError:
+        print(f"IOError: Could not read {save_dir / 'results.csv'}.")
 
 
 def get_path_w_extension(
@@ -164,7 +175,6 @@ def register_model(experiment_name: str, model_name: str, save_dir: Path):
         logging.info(f"artifact_uri = {mlflow.get_artifact_uri()}")
         logging.info(f"runID: {run_id}")
         logging.info(f"experiment_id: {experiment_id}")
-        logging.info(f"MLflow URI: {mlflow.get_tracking_uri()}")
 
 
 def main():
