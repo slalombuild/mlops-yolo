@@ -39,12 +39,14 @@ jobs:
         pytest
     - name: Pull Data
       run: |
-        python main.py  --get_data True --roboflow_api_key ${{secrets.ROBOFLOW_API_KEY}} --train_model False --register_model False --build_image False   --remove_logs False --logging_level INFO
+        python main.py  --get_data True --roboflow_api_key ${{secrets.ROBOFLOW_API_KEY}} --train_model False --model_evaluation False --register_model False --build_image False  --remove_logs False --logging_level INFO
     - name: Train Model
       run: |
-        python main.py  --get_data False --train_model True --register_model False --build_image False   --remove_logs False --logging_level INFO
-    - name: Register Model
+        python main.py  --get_data False --train_model True --model_evaluation False --register_model False --build_image False  --remove_logs False --logging_level INFO
+    - name: Evaluate and Register Model
+      env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
       run: |
-        python main.py  --get_data False --train_model False --register_model True  --model_path "runs/detect/train" --build_image False  --remove_logs False --logging_level INFO
+        python main.py  --get_data False --train_model False --model_evaluation True --register_model True  --model_path "runs/detect/train" --build_image False  --remove_logs False --logging_level INFO
 
 

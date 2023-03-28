@@ -1,8 +1,9 @@
 from scripts.roboflow_data import get_roboflow_data
 from scripts.argparse import create_parser
 from scripts.train import train_model
-from scripts.mlops.register_model import register_model
-from scripts.mlops.mlflow_build_image import build_and_run_sagemaker_image
+from scripts.model_evaluation import evaluate_model
+from scripts.mlflow_utils.register_model import register_model
+from scripts.mlflow_utils.mlflow_build_image import build_and_run_sagemaker_image
 import sys
 import logging
 import json
@@ -14,10 +15,11 @@ import yaml
 # Execute the parse_args() method to get arguments
 args = create_parser().parse_args()
 
-if args.train_model == True and args.register_model == True and args.model_path != None:
-    raise ValueError("Argument: --model_path can only be specified if the argument 'train_model' is set to False when a model will be registered")
-if args.train_model == False and args.register_model == True and args.model_path == None:
-    raise ValueError("If the argument: 'train_model' is set to False then the optional argument --model_path must be specified when a model will be registered")
+if args.train_model == True and (args.register_model == True or args.model_evaluation == True)  and args.model_path != None:
+    raise ValueError("Argument: --model_path can only be specified if the argument 'train_model' is set to False when a model will be registered or evaluated")
+if args.train_model == False and (args.register_model == True or args.model_evaluation == True) and args.model_path == None:
+    raise ValueError("If the argument: 'train_model' is set to False then the optional argument --model_path must be specified when a model will be registered or evaluated")
+
 
 # Clean log directory
 if args.remove_logs:
@@ -46,6 +48,16 @@ logging.debug(f"YOLOv8 Model training log path: {log_path}")
 
 
 def main():
+    """
+    This python script orchestrates a series of function calls to get data, train a model, evaluate a model, register a model, 
+    and build a docker image off the model. The script starts by parsing the arguments passed to it using the create_parser() 
+    function in argparse.py and executing the parse_args() method. The arguments determine the execution flow of the script.
+    The full flow includes: getting data, training the model, evaluating the model, registering the model, and building a
+    docker image off that registered model.
+
+    Raises:
+        ValueError: If inccorect arguements are specified. I.e model_path and train_model
+    """
     # Get Default parameters
     with open("config/model_config.yaml", "r") as file:
         yaml_inputs = yaml.safe_load(file)
@@ -80,7 +92,18 @@ def main():
         )
         model = train_model(dataset_dir=dataset_dir, **training_params)
         logging.info("Training complete.")
-    if args.register_model:
+
+    if args.model_evaluation:
+        logging.info(
+            f"Evaluating the model: {model.trainer.save_dir if args.train_model else args.model_path}"
+        )
+        evaluation_thresholds = yaml_inputs["evaluation_thresholds"]
+        checks_passed = evaluate_model(
+        save_dir=model.trainer.save_dir if args.train_model else args.model_path,evaluation_thresholds=evaluation_thresholds,evaluation_metrics=["mAP50","mAP50-95","precision","recall"])
+        if not checks_passed:
+            logging.error("Model: best.pt metrics failed to meet or exceed evaluation thresholds, model will not be registered and docker image will not be built")
+
+    if args.register_model and (checks_passed if args.model_evaluation else args.register_model):
         logging.info(
             f"Registering the model: {model.trainer.save_dir if args.train_model else args.model_path}"
         )
@@ -89,7 +112,7 @@ def main():
         experiment_name=mlflow_params["experiment_name"],
         model_name=mlflow_params["model_name"],
         save_dir=model.trainer.save_dir if args.train_model else args.model_path)
-    if args.build_image:
+    if args.build_image and checks_passed if args.model_evaluation else args.build_image:
         logging.info(
             f"Building an image for model: {mlflow_params['model_name']} "
         )
@@ -97,6 +120,6 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.info("Process Start")
+    logging.info("ML Run Process Start")
     main()
-    logging.info("Process Complete")
+    logging.info("ML Run Process Complete")
