@@ -103,7 +103,7 @@ def main():
         if not checks_passed:
             logging.error("Model: best.pt metrics failed to meet or exceed evaluation thresholds, model will not be registered and docker image will not be built")
 
-    if args.register_model and checks_passed if args.model_evaluation else True:
+    if args.register_model and (checks_passed if args.model_evaluation else args.register_model):
         logging.info(
             f"Registering the model: {model.trainer.save_dir if args.train_model else args.model_path}"
         )
@@ -112,7 +112,7 @@ def main():
         experiment_name=mlflow_params["experiment_name"],
         model_name=mlflow_params["model_name"],
         save_dir=model.trainer.save_dir if args.train_model else args.model_path)
-    if args.build_image and checks_passed if args.model_evaluation else True:
+    if args.build_image and checks_passed if args.model_evaluation else args.build_image:
         logging.info(
             f"Building an image for model: {mlflow_params['model_name']} "
         )
